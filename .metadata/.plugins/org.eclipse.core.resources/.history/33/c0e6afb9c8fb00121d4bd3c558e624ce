@@ -1,0 +1,98 @@
+package pubsub;
+
+import siena.Filter;
+import siena.ThinClient;
+import siena.comm.InvalidSenderException;
+import java.util.StringTokenizer;
+
+public class SienaPubSubEngine implements PubSubEngine{
+	
+	private ThinClient SienaClient;
+	private String ClientID;
+	private String BrokerID;
+	
+	public int start(String ClientID, String BrokerID) {
+		this.ClientID = ClientID;
+		this.BrokerID = BrokerID;
+		
+		return 0;
+	}
+
+	public int connect(String host, int port) {
+		try {
+			SienaClient = new ThinClient (BrokerID,ClientID);
+		} catch (InvalidSenderException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
+	// predicates = [class,eq,'temp'],[area,eq,'tor'],[value,<,100]
+	
+	public int advertise(String predicates) {
+		
+		StringTokenizer Strtok = new StringTokenizer(predicates,",");
+		String Key,Op,Value;
+		
+		while(Strtok.hasMoreElements()){
+			Key = Strtok.nextToken();
+			Op = Strtok.nextToken();
+			Value = Strtok.nextToken();
+			
+			System.out.println("Key,Op,Value: " + Key + "," + Op +  "," + Value);
+		}
+		//Filter AdvertFilter = new Filter();
+		//AdvertFilter.
+		//SienaClient.advertise(predicates, ClientID);
+		return 0;
+	}
+	
+	public static void main (String args []){
+		advertise("[class,eq,'temp'],[area,eq,'tor'],[value,<,100]");
+		
+	}
+
+	@Override
+	public int unadvertise(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void subscribe(String predicates) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int unsubscribe(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int publish(String predicates) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int registerListener() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int disconnect() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int stop() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

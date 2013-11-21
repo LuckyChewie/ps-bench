@@ -1,0 +1,68 @@
+package pubsub;
+
+import siena.ThinClient;
+
+public class SienaPubSubEngine implements PubSubEngine{
+	
+	private ThinClient SienaClient;
+	
+	public int start(String ClientID, String BrokerID) {
+		SienaClient = new ThinClient ()
+		return 0;
+	}
+
+	@Override
+	public int connect(String host, int port) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int advertise(String predicates) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int unadvertise(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void subscribe(String predicates) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int unsubscribe(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int publish(String predicates) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int registerListener() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int disconnect() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int stop() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

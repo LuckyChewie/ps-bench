@@ -1,0 +1,167 @@
+package pubsub;
+
+import siena.Filter;
+import siena.Notifiable;
+import siena.Notification;
+import siena.Op;
+import siena.SienaException;
+import siena.ThinClient;
+import siena.comm.InvalidSenderException;
+import java.util.StringTokenizer;
+
+import ca.utoronto.msrg.padres.common.message.Message;
+
+public class SienaPubSubEngine implements PubSubEngine{
+	
+	private ThinClient SienaClient;
+	private String ClientID;
+	private String BrokerID;
+	private Filter AdvFilter;
+	private Notfiable Subscriber;
+	
+	public int start(String ClientID, String BrokerID) {
+		this.ClientID = ClientID;
+		this.BrokerID = BrokerID;
+		
+		return 0;
+	}
+
+	public int connect(String host, int port) {
+		try {
+			String uri = "ka:"+host+":"+port;
+			SienaClient = new ThinClient (uri,ClientID);
+		} catch (InvalidSenderException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+	
+	public Filter addConstraint (String predicates){
+		
+		StringTokenizer strtok = new StringTokenizer(predicates,",");
+		
+		while(strtok.hasMoreElements()){
+			String key = strtok.nextToken().replace("[","").replace("]","");
+			//System.out.println("Key: " + key);
+			
+			String operator = strtok.nextToken().replace("[","").replace("]","");
+			//System.out.println("Op: " + operator);
+			
+			String value = strtok.nextToken().replace("[","").replace("]","");
+			//System.out.println("Value: " + value);
+			
+				AdvFilter = new Filter();
+				
+				if(operator.equals("eq"))
+					AdvFilter.addConstraint(key, Op.EQ, value);
+				else if (operator.equals("<"))
+					AdvFilter.addConstraint(key, Op.LT, value);
+				else if (operator.equals(">"))
+					AdvFilter.addConstraint(key, Op.GT, value);
+				else if (operator.equals("<="))
+					AdvFilter.addConstraint(key, Op.LE, value);
+				else if (operator.equals(">="))
+					AdvFilter.addConstraint(key, Op.GE, value);
+				else
+					AdvFilter.addConstraint(key,Op.ANY,value);
+				
+				//System.out.println(AdvFilter.toString());
+		}
+		
+		return AdvFilter;
+	}
+
+	public int advertise(String predicates) {
+		
+		AdvFilter = addConstraint (predicates);
+		
+		try {
+			SienaClient.advertise(AdvFilter, ClientID);
+		} catch (SienaException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+
+	public int unadvertise(int id) {
+		
+		return 0;
+	}
+
+	public void subscribe(String predicates) {
+
+		AdvFilter = addConstraint (predicates);
+		
+		try {
+			SienaClient.subscribe(AdvFilter, Subscriber);
+		} catch (SienaException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int unsubscribe(int id) {
+		return 0;
+	}
+
+	public int publish(String predicates) {
+		
+		Notification n = new Notification();
+		 
+		StringTokenizer strtok = new StringTokenizer(predicates,",");
+		
+		while(strtok.hasMoreElements()){			
+			String key = strtok.nextToken().replace("[","").replace("]","");
+			String value = strtok.nextToken().replace("[","").replace("]","");
+			n.putAttribute(key, value);
+		}
+		
+		//System.out.println(n.toString());
+			
+		 try {
+			SienaClient.publish(n);
+		} catch (SienaException e) {
+			e.printStackTrace();
+		}
+		    
+		 return 0;
+	}
+	
+	public static void main (String args[]){
+		SienaPubSubEngine SienaPubSub = new SienaPubSubEngine();
+		SienaPubSubEngine SienaPubSub2 = new SienaPubSubEngine();
+		
+		SienaPubSub.start("client1", "server1");
+		SienaPubSub.connect("localhost",1100);
+		SienaPubSub.subscribe("[class,eq,'temp'],[area,eq,'tor'],[value,<,0]");
+		
+		SienaPubSub2.start("client2", "server1");
+		SienaPubSub2.connect("localhost",1100);
+		SienaPubSub2.subscribe("[class,eq,'temp'],[area,eq,'tor'],[value,<,0]");
+		
+		//SienaPubSub.advertise("[class,eq,'temp'],[area,eq,'tor'],[value,<,100]");
+		
+		SienaPubSub.publish("[class,'temp'],[area,'tor'],[value,-10]");
+		while(true){
+			;
+		}
+	}
+
+	public int registerListener() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public int disconnect() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int stop() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

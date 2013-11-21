@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CommitComments>	<CommitComment>Fixed whitespace issue</CommitComment>
+	<CommitComment>Fixed whitespace issue.</CommitComment>
+	<CommitComment>Fixed whitespace tokenizer issue with padres</CommitComment>
+	<CommitComment>Cleaned reader interfaces:</CommitComment>
+	<CommitComment>Implemented SienaPubSubEngine</CommitComment>
+</CommitComments>

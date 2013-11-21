@@ -1,0 +1,128 @@
+package pubsub;
+
+import siena.Filter;
+import siena.Notifiable;
+import siena.Op;
+import siena.SienaException;
+import siena.ThinClient;
+import siena.comm.InvalidSenderException;
+import java.util.StringTokenizer;
+
+public class SienaPubSubEngine implements PubSubEngine{
+	
+	private ThinClient SienaClient;
+	private String ClientID;
+	private String BrokerID;
+	private Filter AdvFilter;
+	private Notifiable Subscriber;
+	
+	public int start(String ClientID, String BrokerID) {
+		this.ClientID = ClientID;
+		this.BrokerID = BrokerID;
+		
+		return 0;
+	}
+
+	public int connect(String host, int port) {
+		try {
+			SienaClient = new ThinClient (BrokerID,ClientID);
+		} catch (InvalidSenderException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+	
+	public Filter addConstraint (String predicates){
+		
+		StringTokenizer strtok = new StringTokenizer(predicates,",");
+		
+		while(strtok.hasMoreElements()){
+			String field = strtok.nextToken();
+			
+			//Tokenize and parse to match Siena subscription language format
+			StringTokenizer strtok2 = new StringTokenizer(field,",");
+			while(strtok2.hasMoreElements()){
+				String key = strtok2.nextToken().replace("[","").replace("]","");
+				String operator = strtok2.nextToken().replace("[","").replace("]","");
+				String value = strtok2.nextToken().replace("[","").replace("]","");
+				
+				AdvFilter = new Filter();
+				
+				if(operator.equals("eq"))
+					AdvFilter.addConstraint(key, Op.EQ, value);
+				else if (operator.equals("<"))
+					AdvFilter.addConstraint(key, Op.LT, value);
+				else if (operator.equals(">"))
+					AdvFilter.addConstraint(key, Op.GT, value);
+				else if (operator.equals("<="))
+					AdvFilter.addConstraint(key, Op.LE, value);
+				else if (operator.equals(">="))
+					AdvFilter.addConstraint(key, Op.GE, value);
+			}
+		}
+		
+		return AdvFilter;
+	}
+	
+	public int advertise(String predicates) {
+		
+		AdvFilter.clear();
+		AdvFilter = addConstraint (predicates);
+		
+		try {
+			SienaClient.advertise(AdvFilter, ClientID);
+		} catch (SienaException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+
+	public int unadvertise(int id) {
+		
+		return 0;
+	}
+
+	public void subscribe(String predicates) {
+		AdvFilter.clear();
+		AdvFilter = addConstraint (predicates);
+		
+		try {
+			SienaClient.subscribe(AdvFilter, Subscriber);
+		} catch (SienaException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int unsubscribe(int id) {
+		return 0;
+	}
+
+	public int publish(String predicates) {
+		
+		 Notification n = new Notification();
+		    n.putAttribute("message","Hello, World!");
+		    mySiena.publish(n);
+		    
+		return 0;
+	}
+
+
+	public int registerListener() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public int disconnect() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int stop() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

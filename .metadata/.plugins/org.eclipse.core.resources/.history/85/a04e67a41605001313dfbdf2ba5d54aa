@@ -1,0 +1,188 @@
+package pubsub;
+
+import ca.utoronto.msrg.padres.client.BrokerState;
+import ca.utoronto.msrg.padres.client.Client;
+import ca.utoronto.msrg.padres.client.ClientConfig;
+import ca.utoronto.msrg.padres.client.ClientException;
+import ca.utoronto.msrg.padres.common.message.parser.ParseException;
+import ca.utoronto.msrg.padres.common.comm.MessageQueue;
+import ca.utoronto.msrg.padres.common.message.Message;
+
+public class PadresPubSubEngine implements PubSubEngine {
+		
+	private final String PADRES_CONFIG_FILE_PATH = "etc/PadresConfig.properties";
+	private String ClientID;
+	private String brokerURI;
+	private String BrokerID;
+	
+	private Client PadresClient;
+	private BrokerState PadresBrokerState; 
+	private Thread ListenerThread;
+	private MessageQueue MsgQueue;
+	
+	// Separate thread listens for incoming publications.
+	//Thread waits for notify() signals, which are sent when a new publication is received.
+	public class PadresListener implements Runnable
+	{
+		public void run() {	
+			while(true){
+				try {
+					synchronized(MsgQueue){
+						MsgQueue.wait();
+					}
+				} catch (InterruptedException e) {
+					//e.printStackTrace();
+				}
+				
+				// Pop publication from Message Queue
+				Message PubMsg = MsgQueue.removeFirst();
+				if(PubMsg != null)
+					System.out.println("Got Publication: " + PubMsg.toString());
+			}
+		}
+	}
+	
+	// Initializes and starts a Padres Client.
+	public int start(String ClientID, String BrokerID) {
+		
+		System.out.println("Starting...");
+		
+		this.ClientID = ClientID;
+		this.BrokerID = BrokerID;
+		
+		try {
+			ClientConfig PadresClientConfig = new ClientConfig(PADRES_CONFIG_FILE_PATH);
+			PadresClient = new Client (this.ClientID, PadresClientConfig);
+		} catch (ClientException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+		// Register Listener to listen for incoming publications.
+		MsgQueue = new MessageQueue();
+		registerListener();
+		System.out.println("Start Successful");
+		
+		return 0;
+	}	
+	
+	// Connects the Padres Client to a given BrokerURI (host,port).
+	public int connect(String host, int port) {
+		
+		brokerURI  = "socket://" + host + ":" + port + "/" + BrokerID;
+		System.out.println("Connecting Client to " + brokerURI );
+		
+		try {
+			PadresBrokerState = PadresClient.connect(brokerURI);
+		} catch (ClientException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+		System.out.println("Connections to " + 
+		PadresBrokerState.getBrokerAddress().toString() + " successful\n");
+		
+		return 0;
+	}
+	
+	// Advertise a given set of predicates.
+	public int advertise(String predicates) {
+		
+		System.out.println("In advertise");
+		
+		try {
+			PadresClient.advertise(predicates, brokerURI);
+		} catch (ClientException e) {
+			e.printStackTrace();
+		} catch (ParseException e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public int unadvertise(int id) {
+		
+		System.out.println("In unadvertise");
+		// TODO Auto-generated method stub
+//		try {
+//			PadresClient.unAdvertiseAll();
+//		} catch (ClientException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		return 0;
+	}
+
+	// Subscribe the Padres Client to a specific message pattern.
+	public void subscribe(String predicates) {
+		System.out.println("In subscribe");
+
+		try {
+			PadresClient.subscribe(predicates, brokerURI);
+		} catch (ClientException e) {
+			e.printStackTrace();
+		}
+		catch(ParseException e){
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public int unsubscribe(int id) {
+		
+		System.out.println("In unsubscribe");
+//		try {
+//			PadresClient.unsubscribeAll();
+//		} catch (ClientException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		return 0;
+	}
+
+	// Adds a MessageQueue to which a duplicate of all publications will be sent.
+	// Starts listener in a separate thread. Thread waits for notify() signals, 
+	// which are sent when a new publication is received.
+	public int registerListener() {
+		System.out.println("In Register Listener");
+		
+		PadresClient.addMessageQueue(MsgQueue);
+		ListenerThread = new Thread (new PadresListener());
+		ListenerThread.start();
+		
+		return 0;
+	}
+
+	// Publish a given set of predicates.
+	public int publish(String predicates) {
+		System.out.println("In Publish");
+		try {
+			PadresClient.publish(predicates, brokerURI);
+		} catch (ClientException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	// Disconnect client from all connected brokers.
+	public int disconnect() {
+		PadresClient.disconnectAll();
+		return 0;
+	}
+
+	@Override
+	// Disconnect and shutdown client.
+	public int stop() {
+		try {
+			PadresClient.shutdown();
+		} catch (ClientException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+}

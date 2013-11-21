@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/padres/src/ca/utoronto/msrg/padres/broker/brokercore/BrokerCore.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ca.utoronto.msrg.padres.broker.brokercore.BrokerCore"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-uri socket://localhost:1100/BrokerA"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="padres"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms128m -Xmx512m -Djava.security.policy=etc/java.policy"/>
+</launchConfiguration>
