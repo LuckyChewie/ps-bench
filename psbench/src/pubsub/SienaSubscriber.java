@@ -7,7 +7,7 @@ import siena.SienaException;
 public class SienaSubscriber implements Notifiable {
 
     public void notify(Notification e) {
-        System.out.println("I got this notification: " + e.toString());
+        System.out.println("Got notification: " + e.toString());
     }
 
     public void notify(Notification s[]) {

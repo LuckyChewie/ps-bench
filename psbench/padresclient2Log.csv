@@ -1,13 +1,3 @@
-08/11/2013 06:47:25,Subscription,localhost:1100,"[class,'eq',"oneITS"]",padres,15ms
-08/11/2013 06:48:54,Subscription,localhost:1100,"[class,'eq',oneITS]",padres,25ms
-08/11/2013 06:51:02,Subscription,localhost:1100,"[class,'eq',oneITS]",padres,25ms
-08/11/2013 06:52:11,Subscription,localhost:1100,"[class,'eq','oneITS']",padres,26ms
-08/11/2013 06:54:27,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,44ms
-08/11/2013 06:54:37,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,50ms
-08/11/2013 06:56:52,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,49ms
-08/11/2013 07:10:17,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,51ms
-08/11/2013 07:14:25,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,45ms
-08/11/2013 07:16:52,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,53ms
-08/11/2013 07:19:22,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,28ms
-08/11/2013 07:20:29,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,48ms
-14/11/2013 23:27:31,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,58.0ms
+21/11/2013 18:56:11,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,27503100ns
+21/11/2013 19:03:23,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,-35ns
+21/11/2013 19:06:59,Subscription,localhost:1100,"[class,eq,'oneITS']",padres,26.984945ms

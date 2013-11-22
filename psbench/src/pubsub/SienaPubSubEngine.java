@@ -85,7 +85,7 @@ public class SienaPubSubEngine implements PubSubEngine{
 	}
 
 	public void subscribe(String predicates) {
-
+		System.out.println("Subscribing...");
 		addConstraint (predicates);
 		try {
 			Subscriber = new SienaSubscriber();
@@ -102,6 +102,7 @@ public class SienaPubSubEngine implements PubSubEngine{
 
 	public int publish(String predicates) {
 		
+		System.out.println("Publishing...");
 		Notification n = new Notification();
 		 
 		StringTokenizer strtok = new StringTokenizer(predicates,",");

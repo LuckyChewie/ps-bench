@@ -1,4 +1,1 @@
-08/11/2013 06:45:50,Subscription,localhost:1101,"[class,'eq',"oneITS"]",siena,31ms
-08/11/2013 06:45:52,Subscription,localhost:1101,"[class,'eq',"oneITS"]",siena,27ms
-08/11/2013 06:46:47,Subscription,localhost:1101,"[class,'eq',"oneITS"]",siena,30ms
-14/11/2013 23:27:05,Subscription,localhost:1101,"[class,eq,'oneITS']",siena,74.0ms
+21/11/2013 18:56:15,Subscription,localhost:1101,"[class,eq,'oneITS']",siena,27664049ns

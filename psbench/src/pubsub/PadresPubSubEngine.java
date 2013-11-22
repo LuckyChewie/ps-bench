@@ -116,7 +116,7 @@ public class PadresPubSubEngine implements PubSubEngine {
 
 	// Subscribe the Padres Client to a specific message pattern.
 	public void subscribe(String predicates) {
-		System.out.println("In subscribe");
+		System.out.println("Subscribing...");
 
 		try {
 			PadresClient.subscribe(predicates, brokerURI);
@@ -158,7 +158,7 @@ public class PadresPubSubEngine implements PubSubEngine {
 
 	// Publish a given set of predicates.
 	public int publish(String predicates) {
-		System.out.println("In Publish");
+		System.out.println("Publishing...");
 		try {
 			PadresClient.publish(predicates, brokerURI);
 		} catch (ClientException e) {

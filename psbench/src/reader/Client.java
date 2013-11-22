@@ -85,12 +85,12 @@ public class Client {
 			String args = scan.nextLine().replaceFirst("\\s","");
 				
 			if(command.equals("p")){
-					startTime = System.currentTimeMillis();
+					startTime = System.nanoTime();
 					engine.publish(args);
-					endTime = System.currentTimeMillis();
+					endTime = System.nanoTime();
 					
 					log = dateFormat.format(new Date()) + ",Publication," + host + ":"+ port + ",\"" +
-					args + "\"," + engineType + "," + (endTime-startTime)+"ms\n";
+					args + "\"," + engineType + "," + (endTime-startTime)/1000000.0+"ms\n";
 					
 					try {
 						ExecutionLogs.append(log);
@@ -101,12 +101,12 @@ public class Client {
 			}
 					
 			else if (command.equals("a")){
-		 			startTime = System.currentTimeMillis();
+		 			startTime = System.nanoTime();
 					engine.advertise(args);
-					endTime = System.currentTimeMillis();
+					endTime = System.nanoTime();
 					
 					log = dateFormat.format(new Date()) + ",Advertisement," + host + ":"+ port + ",\"" +
-					args + "\"," + engineType + "," + (endTime-startTime)+"ms\n";
+					args + "\"," + engineType + "," + (endTime-startTime)/1000000.0+"ms\n";
 					
 					try {
 						ExecutionLogs.append(log);
@@ -117,12 +117,12 @@ public class Client {
 			}
 			
 			else if (command.equals("ua")){
-					startTime = System.currentTimeMillis();
+					startTime = System.nanoTime();
 					engine.unadvertise(Integer.parseInt(args));
-					endTime = System.currentTimeMillis();
+					endTime = System.nanoTime();
 					
 					log = dateFormat.format(new Date()) + ",Unadvertisement," + host + ":"+ port + ",\"" +
-					args + "\"," + engineType + "," + (endTime-startTime)+"ms\n";
+					args + "\"," + engineType + "," + (endTime-startTime)/1000000.0+"ms\n";
 					
 					try {
 						ExecutionLogs.append(log);
@@ -132,12 +132,12 @@ public class Client {
 			}
 					
 			else if (command.equals("s")){
-					startTime = System.currentTimeMillis();
+					startTime = System.nanoTime();
 					engine.subscribe(args);
-					endTime = System.currentTimeMillis();
+					endTime = System.nanoTime();
 					
 					log = dateFormat.format(new Date()) + ",Subscription," + host + ":"+ port + ",\"" +
-					args + "\"," + engineType + "," + (endTime-startTime)+"ms\n";
+					args + "\"," + engineType + "," + (endTime-startTime)/1000000.0+"ms\n";
 					
 					try {
 						ExecutionLogs.append(log);
@@ -148,12 +148,12 @@ public class Client {
 			}
 			
 			else if (command.equals("ua")){
-					startTime = System.currentTimeMillis();
+					startTime = System.nanoTime();
 					engine.unsubscribe(Integer.parseInt(args));
-					endTime = System.currentTimeMillis();
+					endTime = System.nanoTime();
 					
 					log = dateFormat.format(new Date()) + ",Unsubscription," + host + ":"+ port + ",\"" +
-					args + "\"," + engineType + "," + (endTime-startTime)+"ms\n";
+					args + "\"," + engineType + "," + (endTime-startTime)/1000000.0+"ms\n";
 					
 					try {
 						ExecutionLogs.append(log);
