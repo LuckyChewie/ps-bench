@@ -1,5 +1,6 @@
 package pubsub;
 
+import java.io.IOException;
 import java.util.StringTokenizer;
 
 import siena.Filter;
@@ -7,7 +8,7 @@ import siena.Notification;
 import siena.Op;
 import siena.SienaException;
 import siena.ThinClient;
-import siena.comm.InvalidSenderException;
+import siena.comm.*;
 
 public class SienaPubSubEngine implements PubSubEngine{
 	
@@ -28,12 +29,21 @@ public class SienaPubSubEngine implements PubSubEngine{
 		try {
 			String uri = "ka:"+host+":"+port;
 			SienaClient = new ThinClient (uri,ClientID);
+			try {
+				SienaClient.setReceiver(new KAPacketReceiver());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} catch (InvalidSenderException e) {
 			e.printStackTrace();
 		}
 
 		return 0;
 	}
+	
+	public boolean isNumeric(String s) {  
+	    return s.matches("[-+]?\\d*\\.?\\d+");  
+	}  
 	
 	public void addConstraint (String predicates){
 		
@@ -42,24 +52,34 @@ public class SienaPubSubEngine implements PubSubEngine{
 		
 		while(strtok.hasMoreElements()){
 			String key = strtok.nextToken().replace("[","").replace("]","").replace("'","");
-			//System.out.println("Key: " + key);
-			
 			String operator = strtok.nextToken().replace("[","").replace("]","").replace("'","");
-			//System.out.println("Op: " + operator);
-			
 			String value = strtok.nextToken().replace("[","").replace("]","").replace("'","");
-			//System.out.println("Value: " + value);
 				
 				if(operator.equals("eq"))
-					AdvFilter.addConstraint(key, Op.EQ, value);
+					if(!isNumeric(value))
+						AdvFilter.addConstraint(key, Op.EQ, value);
+					else
+						AdvFilter.addConstraint(key,Op.EQ, Double.parseDouble(value));
 				else if (operator.equals("<"))
-					AdvFilter.addConstraint(key, Op.LT, value);
+					if(!isNumeric(value))
+						AdvFilter.addConstraint(key, Op.LT, value);
+					else
+						AdvFilter.addConstraint(key,Op.LT, Double.parseDouble(value));
 				else if (operator.equals(">"))
-					AdvFilter.addConstraint(key, Op.GT, value);
+					if(!isNumeric(value))
+						AdvFilter.addConstraint(key, Op.GT, value);
+					else
+						AdvFilter.addConstraint(key,Op.GT, Double.parseDouble(value));
 				else if (operator.equals("<="))
-					AdvFilter.addConstraint(key, Op.LE, value);
+					if(!isNumeric(value))
+						AdvFilter.addConstraint(key, Op.LE, value);
+					else
+						AdvFilter.addConstraint(key,Op.LE, Double.parseDouble(value));
 				else if (operator.equals(">="))
-					AdvFilter.addConstraint(key, Op.GE, value);
+					if(!isNumeric(value))
+						AdvFilter.addConstraint(key, Op.GE, value);
+					else
+						AdvFilter.addConstraint(key,Op.GE, Double.parseDouble(value));
 				else
 					AdvFilter.addConstraint(key,Op.ANY,value);
 		}
@@ -67,15 +87,15 @@ public class SienaPubSubEngine implements PubSubEngine{
 
 	public int advertise(String predicates) {
 		
-	//addConstraint (predicates);
-
-//		try {
-//			SienaClient.advertise(AdvFilter, ClientID);
-//			System.out.println("AdvConstraints: " + AdvFilter.toString());
-//		} catch (SienaException e) {
-//			e.printStackTrace();
-//		}
-//		
+		addConstraint (predicates);
+System.out.println("AdvConstraints: " + AdvFilter.toString());
+		try {
+			SienaClient.advertise(AdvFilter, ClientID);
+			System.out.println("AdvConstraints: " + AdvFilter.toString());
+		} catch (SienaException e) {
+			e.printStackTrace();
+		}
+		
 		return 0;
 	}
 
@@ -87,6 +107,7 @@ public class SienaPubSubEngine implements PubSubEngine{
 	public void subscribe(String predicates) {
 		System.out.println("Subscribing...");
 		addConstraint (predicates);
+		System.out.println("AdvFilter: " + AdvFilter.toString());
 		try {
 			Subscriber = new SienaSubscriber();
 			SienaClient.subscribe(AdvFilter, Subscriber);
@@ -110,10 +131,13 @@ public class SienaPubSubEngine implements PubSubEngine{
 		while(strtok.hasMoreElements()){			
 			String key = strtok.nextToken().replace("[","").replace("]","").replace("'","");
 			String value = strtok.nextToken().replace("[","").replace("]","").replace("'","");
-			n.putAttribute(key, value);
+			if(!isNumeric(value))
+				n.putAttribute(key, value);
+			else
+				n.putAttribute(key, Double.parseDouble(value));
 		}
 		
-		//System.out.println(n.toString());
+		System.out.println("pub-notif: " + n.toString());
 			
 		 try {
 			SienaClient.publish(n);
@@ -126,18 +150,15 @@ public class SienaPubSubEngine implements PubSubEngine{
 	
 
 	public int registerListener() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	public int disconnect() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public int stop() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
