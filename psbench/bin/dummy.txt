@@ -1,0 +1,6 @@
+1500 a [class,eq,'oneITS'],[area,eq,'tor'],[value,<,90]
+1500 p [class,'oneITS'],[area,'tor'],[value,80]
+1500 p [class,'oneITS'],[area,'tor'],[value,105]
+1500 p [class,'oneITS'],[area,'tor'],[value,20]
+1500 p [class,'oneITS'],[area,'tor'],[value,50]
+1500 p [class,'oneITS'],[area,'tor'],[value,40]

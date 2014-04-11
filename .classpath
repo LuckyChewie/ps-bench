@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="psbench/src"/>
+	<classpathentry kind="lib" path="psbench/lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="psbench/lib/padres.jar"/>
+	<classpathentry kind="lib" path="psbench/lib/siena.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="psbench/bin"/>
+</classpath>

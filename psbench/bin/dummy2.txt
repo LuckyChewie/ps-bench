@@ -1,0 +1,6 @@
+500 a [class,eq,"oneITS"],[area,isPresent,'tor'],[value,isPresent,0]
+500 p [class,"oneITS"],[area,'abc'],[value,-80]
+500 p [class,"oneITS"],[area,'def'],[value,10]
+500 p [class,"oneITS"],[area,'geh'],[value,-20]
+500 p [class,"oneITS"],[area,'ijk'],[value,50]
+500 p [class,"oneITS"],[area,'mno'],[value,-40]
